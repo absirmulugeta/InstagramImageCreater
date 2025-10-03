@@ -86,11 +86,12 @@ Example JSON format:
 
 // Step 2: Generate a single image with a specific style and clothing.
 const generateSingleImage = async (ai: GoogleGenAI, imagePart: Part, country: string, destination: string, stylePrompt: string, clothingDescription: string): Promise<string> => {
-  const prompt = `Create a photorealistic image placing the person from the provided photo at ${destination}, ${country}.
-It is critically important that you DO NOT change their facial features, face structure, or ethnicity. Preserve the person's face exactly as it is in the original image.
-You MUST change their clothing to match this exact description: ${clothingDescription}.
-The final image should look like a high-quality travel photograph, with a portrait aspect ratio of 4:5, suitable for social media.
-${stylePrompt}`; // Apply the specific style here.
+  const prompt = `Task: Edit the user's photo based on the following rules.
+1.  **Background:** Place the person from the photo at this location: ${destination}, ${country}.
+2.  **Face:** Do NOT change the person's facial features, structure, or ethnicity. This is the most important rule.
+3.  **Clothing:** You MUST change the person's clothes to this exact description: "${clothingDescription}".
+4.  **Style:** Apply this artistic style: "${stylePrompt}".
+5.  **Format:** The final image must be photorealistic with a 4:5 portrait aspect ratio, suitable for social media.`;
 
   const textPart = { text: prompt };
 
@@ -100,7 +101,7 @@ ${stylePrompt}`; // Apply the specific style here.
       parts: [imagePart, textPart],
     },
     config: {
-      responseModalities: [Modality.IMAGE, Modality.TEXT], // TEXT is included as per model requirements, though we don't use the text output here.
+      responseModalities: [Modality.IMAGE, Modality.TEXT], // TEXT is included as per model requirements.
     },
   });
   
@@ -138,10 +139,10 @@ export const generateTravelImage = async (imageFile: File, country: string, dest
   const imagePart = await fileToGenerativePart(imageFile);
 
   const stylePrompts = [
-    "Style: A vibrant, sunny day candid shot with natural lighting and bright colors.",
-    "Style: A dramatic, cinematic shot with moody lighting, perhaps during the golden hour just before sunset.",
-    "Style: A professional portrait shot. Use a shallow depth of field to create a beautifully blurred background (bokeh effect), making the person stand out.",
-    "Style: An epic, scenic shot. Make the background feel vast and grand, with the person as a key part of the beautiful landscape."
+    "A vibrant, sunny day candid shot with natural lighting and bright colors.",
+    "A dramatic, cinematic shot with moody lighting, perhaps during the golden hour just before sunset.",
+    "A professional portrait shot. Use a shallow depth of field to create a beautifully blurred background (bokeh effect), making the person stand out.",
+    "An epic, scenic shot. Make the background feel vast and grand, with the person as a key part of the beautiful landscape."
   ];
 
   const imagePromises = stylePrompts.map(prompt => 
