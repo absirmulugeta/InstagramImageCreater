@@ -1,0 +1,5 @@
+{
+  "name": "AI Time Traveler",
+  "description": "Upload a photo of a person, select a country and a famous destination, and our AI will generate a realistic image of that person at the location with historically and culturally appropriate attire, while preserving their facial features.",
+  "requestFramePermissions": []
+}
